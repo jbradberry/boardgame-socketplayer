@@ -58,12 +58,12 @@ class Player(object):
         print self.board.display(state)
 
     def handle_action(self, msg):
-        while True:
-            move = raw_input("Please enter your move: ")
-            if self.board.is_legal(self.states[-1], move):
-                break
+        move = self.get_play()
         self.socket.sendall("play {0!r}\r\n".format(move))
 
     def handle_winner(self, msg):
         print self.board.winner_message(msg)
         self.running = False
+
+    def get_play(self):
+        pass
