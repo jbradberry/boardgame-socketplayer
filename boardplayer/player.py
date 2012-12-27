@@ -1,3 +1,4 @@
+import sys
 import ast
 import socket
 
@@ -16,8 +17,16 @@ class Player(object):
                          'action': self.handle_action,
                          'winner': self.handle_winner,}
 
+        self.addr = '127.0.0.1'
+        self.port = 4242
+        pos_args = sys.argv[1:]
+        if len(pos_args) > 0:
+            self.addr = pos_args[0]
+        if len(pos_args) > 1:
+            self.port = int(pos_args[1])
+
     def run(self):
-        self.socket = socket.create_connection(('localhost', 4242))
+        self.socket = socket.create_connection((self.addr, self.port))
         self.running = True
         while self.running:
             message = self.socket.recv(4096)
