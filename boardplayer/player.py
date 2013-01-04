@@ -64,7 +64,7 @@ class Player(object):
     def handle_update(self, msg):
         play, state = msg # FIXME: do something with 'play'
         self.states.append(state)
-        print self.board.display(state)
+        print self.board.display(state, play)
 
     def handle_action(self, msg):
         move = self.get_play()
