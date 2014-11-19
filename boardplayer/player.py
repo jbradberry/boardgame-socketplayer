@@ -3,11 +3,9 @@ import ast
 import socket
 
 
-class Player(object):
-    def __init__(self, board):
-        self.board = board
-        self.player = None
-        self.states = []
+class Client(object):
+    def __init__(self, player, addr=None, port=None):
+        self.player = player
         self.running = False
         self.receiver = {'player': self.handle_player,
                          'decline': self.handle_decline,
@@ -17,13 +15,8 @@ class Player(object):
                          'action': self.handle_action,
                          'winner': self.handle_winner,}
 
-        self.addr = '127.0.0.1'
-        self.port = 4242
-        pos_args = sys.argv[1:]
-        if len(pos_args) > 0:
-            self.addr = pos_args[0]
-        if len(pos_args) > 1:
-            self.port = int(pos_args[1])
+        self.addr = addr if addr is not None else '127.0.0.1'
+        self.port = port if port is not None else 4242
 
     def run(self):
         self.socket = socket.create_connection((self.addr, self.port))
@@ -49,7 +42,7 @@ class Player(object):
 
     def handle_player(self, msg):
         print "You are player #{0}.".format(msg)
-        self.player = msg
+        self.player.player = msg
 
     def handle_decline(self, msg):
         print msg
@@ -62,17 +55,40 @@ class Player(object):
         print msg # FIXME: do something useful
 
     def handle_update(self, msg):
-        play, state = msg # FIXME: do something with 'play'
-        self.states.append(state)
-        print self.board.display(state, play)
+        play, state = msg
+        self.player.update(state)
+        print self.player.display(state, play)
 
     def handle_action(self, msg):
-        move = self.get_play()
+        move = self.player.get_play()
         self.socket.sendall("play {0!r}\r\n".format(move))
 
     def handle_winner(self, msg):
-        print self.board.winner_message(msg)
+        print self.player.winner_message(msg)
         self.running = False
 
+
+class HumanPlayer(object):
+    def __init__(self, board):
+        self.board = board
+        self.player = None
+        self.states = []
+
+    def update(self, state):
+        self.states.append(state)
+
+    def display(self, state, play):
+        return self.board.display(state, play)
+
+    def winner_message(self, msg):
+        print self.board.winner_message(msg)
+
     def get_play(self):
-        pass
+        while True:
+            move = raw_input("Please enter your move: ")
+            move = self.board.parse(move)
+            if move is None:
+                continue
+            if self.board.is_legal(self.states[-1], move):
+                break
+        return move
