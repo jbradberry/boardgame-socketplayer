@@ -81,7 +81,7 @@ class HumanPlayer(object):
         return self.board.display(state, play)
 
     def winner_message(self, msg):
-        print self.board.winner_message(msg)
+        return self.board.winner_message(msg)
 
     def get_play(self):
         while True:
