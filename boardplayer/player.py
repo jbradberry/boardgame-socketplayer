@@ -89,6 +89,6 @@ class HumanPlayer(object):
             move = self.board.parse(move)
             if move is None:
                 continue
-            if self.board.is_legal(self.states[-1], move):
+            if self.board.is_legal(self.states, move):
                 break
         return move
