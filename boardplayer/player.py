@@ -55,13 +55,13 @@ class Client(object):
         print msg # FIXME: do something useful
 
     def handle_update(self, msg):
-        play, state = msg
+        action, state = msg
         self.player.update(state)
-        print self.player.display(state, play)
+        print self.player.display(state, action)
 
     def handle_action(self, msg):
-        move = self.player.get_play()
-        self.socket.sendall("play {0!r}\r\n".format(move))
+        action = self.player.get_action()
+        self.socket.sendall("play {0!r}\r\n".format(action))
 
     def handle_winner(self, msg):
         print self.player.winner_message(msg)
@@ -77,18 +77,18 @@ class HumanPlayer(object):
     def update(self, state):
         self.states.append(state)
 
-    def display(self, state, play):
-        return self.board.display(state, play)
+    def display(self, state, action):
+        return self.board.display(state, action)
 
     def winner_message(self, msg):
         return self.board.winner_message(msg)
 
-    def get_play(self):
+    def get_action(self):
         while True:
-            move = raw_input("Please enter your move: ")
-            move = self.board.parse(move)
-            if move is None:
+            action = raw_input("Please enter your action: ")
+            action = self.board.parse(action)
+            if action is None:
                 continue
-            if self.board.is_legal(self.states, move):
+            if self.board.is_legal(self.states, action):
                 break
-        return move
+        return action
