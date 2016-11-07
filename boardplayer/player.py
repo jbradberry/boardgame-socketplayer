@@ -85,8 +85,8 @@ class HumanPlayer(object):
 
     def get_action(self):
         while True:
-            action = raw_input("Please enter your action: ")
-            action = self.board.parse(action)
+            notation = raw_input("Please enter your action: ")
+            action = self.board.pack_action(notation)
             if action is None:
                 continue
             if self.board.is_legal(self.states, action):
