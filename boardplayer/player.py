@@ -13,7 +13,7 @@ class Client(object):
                          'illegal': self.handle_illegal,
                          'update': self.handle_update,
                          'action': self.handle_action,
-                         'winner': self.handle_winner,}
+                         'winners': self.handle_winners,}
 
         self.addr = addr if addr is not None else '127.0.0.1'
         self.port = port if port is not None else 4242
@@ -63,7 +63,7 @@ class Client(object):
         action = self.player.get_action()
         self.socket.sendall("play {0!r}\r\n".format(action))
 
-    def handle_winner(self, msg):
+    def handle_winners(self, msg):
         print self.player.winner_message(msg)
         self.running = False
 
