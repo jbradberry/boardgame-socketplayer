@@ -20,7 +20,9 @@ class Client(object):
         self.socket = socket.create_connection((self.addr, self.port))
         self.running = True
         while self.running:
-            message = self.socket.recv(4096)
+            message = ''
+            while not message.endswith('\r\n'):
+                message += self.socket.recv(4096)
             messages = message.rstrip().split('\r\n')
             for message in messages:
                 data = json.loads(message)
