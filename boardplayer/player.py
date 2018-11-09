@@ -49,7 +49,7 @@ class Client(object):
 
     def handle_update(self, data):
         state = data['state']
-        action = data.get('last_action', {}).get('notation') or ''
+        action = data.get('last_action', {}).get('action') or {}
         self.player.update(state)
 
         print self.player.display(state, action)
@@ -57,8 +57,7 @@ class Client(object):
             print self.player.winner_message(data['winners'])
             self.running = False
         elif data['state']['player'] == self.player.player:
-            action = self.player.get_action()
-            self.send({'type': 'action', 'message': action})
+            self.send(self.player.get_action())
 
     def send(self, data):
         self.socket.sendall("{0}\r\n".format(json.dumps(data)))
@@ -71,11 +70,9 @@ class HumanPlayer(object):
         self.history = []
 
     def update(self, state):
-        self.history.append(self.board.pack_state(state))
+        self.history.append(self.board.to_compact_state(state))
 
     def display(self, state, action):
-        state = self.board.pack_state(state)
-        action = self.board.pack_action(action)
         return self.board.display(state, action)
 
     def winner_message(self, winners):
@@ -84,9 +81,12 @@ class HumanPlayer(object):
     def get_action(self):
         while True:
             notation = raw_input("Please enter your action: ")
-            action = self.board.pack_action(notation)
+            action = self.board.from_notation(notation)
             if action is None:
                 continue
             if self.board.is_legal(self.history, action):
                 break
-        return notation
+        return {
+            'type': 'action',
+            'message': self.board.to_json_action(action),
+        }
