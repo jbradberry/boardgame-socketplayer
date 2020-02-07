@@ -84,7 +84,7 @@ class HumanPlayer(object):
             action = self.board.from_notation(notation)
             if action is None:
                 continue
-            if self.board.is_legal(self.history, action):
+            if self.board.is_legal(self.history[-1], action):
                 break
         return {
             'type': 'action',
