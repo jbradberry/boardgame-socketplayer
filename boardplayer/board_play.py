@@ -17,12 +17,14 @@ parser.add_argument('address', nargs='?')
 parser.add_argument('port', nargs='?', type=int)
 parser.add_argument('-e', '--extra', action='append')
 
-args = parser.parse_args()
 
-board = board_plugins[args.game]
-player_obj = player_plugins[args.player]
-player_kwargs = {k: w for k, w in (arg.split('=') for arg in args.extra or ())}
+def main():
+    args = parser.parse_args()
 
-client = player.Client(player_obj(board(), **player_kwargs),
-                       args.address, args.port)
-client.run()
+    board = board_plugins[args.game]
+    player_obj = player_plugins[args.player]
+    player_kwargs = {k: w for k, w in (arg.split('=') for arg in args.extra or ())}
+
+    client = player.Client(player_obj(board(), **player_kwargs),
+                           args.address, args.port)
+    client.run()
