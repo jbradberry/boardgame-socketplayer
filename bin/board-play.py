@@ -1,21 +1,13 @@
 #!/usr/bin/env python
-import sys
 import argparse
-
-from pkg_resources import iter_entry_points
+from importlib.metadata import entry_points
+import sys
 
 from boardplayer import player
 
 
-board_plugins = dict(
-    (ep.name, ep.load())
-    for ep in iter_entry_points('jrb_board.games')
-)
-
-player_plugins = dict(
-    (ep.name, ep.load())
-    for ep in iter_entry_points('jrb_board.players')
-)
+board_plugins = {ep.name: ep.load() for ep in entry_points(group='jrb_board.games')}
+player_plugins = {ep.name: ep.load() for ep in entry_points(group='jrb_board.players')}
 
 parser = argparse.ArgumentParser(
     description="Play a boardgame using a specified player type.")
@@ -29,8 +21,7 @@ args = parser.parse_args()
 
 board = board_plugins[args.game]
 player_obj = player_plugins[args.player]
-player_kwargs = dict(arg.split('=') for arg in args.extra or ())
-
+player_kwargs = {k: w for k, w in (arg.split('=') for arg in args.extra or ())}
 
 client = player.Client(player_obj(board(), **player_kwargs),
                        args.address, args.port)
