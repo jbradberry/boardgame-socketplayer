@@ -1,7 +1,6 @@
 import json
 import socket
 import sys
-from six.moves import input
 
 
 class Client(object):

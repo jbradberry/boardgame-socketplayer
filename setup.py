@@ -11,7 +11,6 @@ setup(
         'jrb_board.games': [],
         'jrb_board.players': 'human = boardplayer.player:HumanPlayer'
     },
-    install_requires=['six'],
     license='LICENSE',
     description="A generic board game player.",
 )
