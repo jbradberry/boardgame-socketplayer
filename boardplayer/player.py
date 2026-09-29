@@ -3,7 +3,7 @@ import socket
 import sys
 
 
-class Client(object):
+class Client:
     def __init__(self, player, addr=None, port=None):
         self.player = player
         self.running = False
@@ -63,7 +63,7 @@ class Client(object):
         self.socket.sendall("{0}\r\n".format(json.dumps(data)).encode('utf-8'))
 
 
-class HumanPlayer(object):
+class HumanPlayer:
     def __init__(self, board):
         self.board = board
         self.player = None
