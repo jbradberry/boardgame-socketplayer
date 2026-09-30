@@ -13,8 +13,7 @@ Carlo Tree Search implementation `jbradberry/mcts
 Requirements
 ------------
 
-* Python 2.7, 3.5+; PyPy; PyPy3
-* six
+* Python 3.10+; PyPy; PyPy3
 
 
 Getting Started
@@ -36,20 +35,20 @@ or from github, ::
 To connect to a server as a human player playing (for example) `Ultimate Tic Tac Toe
 <https://github.com/jbradberry/ultimate_tictactoe>`_ ::
 
-    $ board-play.py t3 human
-    $ board-play.py t3 human 192.168.1.1 8000   # with ip addr and port
+    $ board-play t3 human
+    $ board-play t3 human 192.168.1.1 8000   # with ip addr and port
 
 To connect a client using one of the compatible `Monte Carlo Tree
 Search AI <https://github.com/jbradberry/mcts>`_ players ::
 
-    $ board-play.py t3 jrb.mcts.uct    # number of wins metric
-    $ board-play.py t3 jrb.mcts.uctv   # point value of the board metric
+    $ board-play t3 jrb.mcts.uct    # number of wins metric
+    $ board-play t3 jrb.mcts.uctv   # point value of the board metric
 
 Configuration variables can be passed in using ``-e <variable
 name>=<variable value>``.  The ``-e`` flag may be repeated to pass in
 multiple variables.  For example, ::
 
-    $ board-play.py t3 jrb.mcts.uct -e time=120 -e C=3.5
+    $ board-play t3 jrb.mcts.uct -e time=120 -e C=3.5
 
 would configure the UCT player to use 2 minutes of thinking time, with
 an exploration coefficient of 3.5.
