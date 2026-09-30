@@ -1,12 +1,9 @@
-from __future__ import absolute_import
-from __future__ import print_function
 import json
 import socket
 import sys
-from six.moves import input
 
 
-class Client(object):
+class Client:
     def __init__(self, player, addr=None, port=None):
         self.player = player
         self.running = False
@@ -30,14 +27,13 @@ class Client(object):
             for message in messages:
                 data = json.loads(message)
                 if data['type'] not in self.receiver:
-                    raise ValueError(
-                        "Unexpected message from server: {0!r}".format(message))
+                    raise ValueError(f"Unexpected message from server: {message!r}")
 
                 self.receiver[data['type']](data)
 
     def handle_player(self, data):
         player = data['message']
-        print("You are player #{0}.".format(player))
+        print(f"You are player #{player}.")
         self.player.player = player
 
     def handle_decline(self, data):
@@ -63,10 +59,10 @@ class Client(object):
             self.send(self.player.get_action())
 
     def send(self, data):
-        self.socket.sendall("{0}\r\n".format(json.dumps(data)).encode('utf-8'))
+        self.socket.sendall(f"{json.dumps(data)}\r\n".encode('utf-8'))
 
 
-class HumanPlayer(object):
+class HumanPlayer:
     def __init__(self, board):
         self.board = board
         self.player = None
